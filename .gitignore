@@ -2,3 +2,7 @@
 .env
 JackEnv/
 .ruff_cache/
+__pycache__/
+.pytest_cache/
+ game_process/__pycache__/
+ tests/__pycache__/
