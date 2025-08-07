@@ -1,6 +1,6 @@
 from typing import Dict, Any
 
-class User_Hands:
+class UserHands:
     def __init__(self, deck: Dict[str, Any]) -> None:
         self.deck_nums = {
             1: 1,
@@ -21,4 +21,8 @@ class User_Hands:
 
 
     def get_deck(self, deck: Dict[str, Any]) -> None:
-       pass 
+        """
+        I will write this some late, now i trying to fix all bugs and etc., in side-projects like LazyDeveloperhelper
+
+        """
+        pass 
