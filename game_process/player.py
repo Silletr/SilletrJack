@@ -8,6 +8,7 @@ class UserHands:
 
         self.player_hand: List[str] = []
         self.dealer_hand: List[str] = []
+        self.choise = 0
 
     def generate_full_deck(self) -> List[str]:
         """ Generating standart deck, only numbers without ranks """
@@ -50,10 +51,11 @@ class UserHands:
     def stay_user_command(self):
         if self.choise == 1:
             print(f"Player stayed, current score: {self.player_hand}")
+            return self.user_hand_result
     def stay_dealer_command(self):
         if self.choise == 1:
             print(f"Dealer stayed, current score: {self.dealer_hand}")
-
+            return self.dealer_hand_result
 
     def card_comparison(self):
         self.user_hand_result = self.calculate_hand_value(self.player_hand)
