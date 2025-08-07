@@ -1,12 +1,12 @@
 ## Category
 - [ ] 🆕 NEW FEATURE
-- [ ] 🐛	 BUGFIX
-- [ ] 🧹	CLEANUP
-- [ ] 📝	DOCS
-- [ ] 🧪	TEST
-- [ ] 🔥	HOTFIX
-- [ ] 🎨	STYLE
-- [ ] 🗃️	STRUCTURE
+- [ ] 🐛 BUGFIX
+- [ ] 🧹 CLEANUP
+- [ ] 📝 DOCS
+- [ ] 🧪 TEST
+- [ ] 🔥 HOTFIX
+- [ ] 🎨 STYLE
+- [ ] 🗃️ STRUCTURE
 
 ---
 ## What changed:
