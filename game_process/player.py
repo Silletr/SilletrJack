@@ -64,10 +64,10 @@ class UserHands:
         self.dealer_hand_result = self.calculate_hand_value(self.dealer_hand)
     
         if self.user_hand_result == 21 or self.dealer_hand_result > 21: 
-            print(f"User win with Natural BlackJack!")
+            print("User win with Natural BlackJack!")
 
         if self.dealer_hand_result == 21:
-            print(f"Dealer win with Natural BlackJack! User need a little bit bigger luck")
+            print("Dealer win with Natural BlackJack! User need a little bit bigger luck")
 
         if 17 <= self.dealer_hand_result < 21:
             self.stay_dealer_command()
