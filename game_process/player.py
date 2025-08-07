@@ -8,11 +8,13 @@ class UserHands:
 
         self.player_hand: List[str] = []
         self.dealer_hand: List[str] = []
-        self.choise = 0
+        self.user_choice = 0
+        self.dealer_choice = 0
+
 
     def generate_full_deck(self) -> List[str]:
         """ Generating standart deck, only numbers without ranks """
-        base_cards = [str(i) for i in range(2, 11)] + ['K', 'Q', 'A']
+        base_cards = [str(i) for i in range(2, 11)] + ['K', 'Q', 'A', 'J']
         deck = base_cards * 4 # 4 cards as in defaul deck 
         return deck
 
@@ -25,7 +27,7 @@ class UserHands:
         print(f"Player's hand: {self.player_hand} = {self.calculate_hand_value(self.player_hand)}")
         print(f"Dealer's hand: {self.dealer_hand} = {self.calculate_hand_value(self.dealer_hand)}")
         if self.calculate_hand_value(self.player_hand) < 21:
-            self.choise = int(input("1 - stay, 2 - hit"))
+            self.user_choice = int(input("1 - stay, 2 - hit"))
 
     def calculate_hand_value(self, hand: List[str]) -> int:
         value = 0
@@ -49,13 +51,13 @@ class UserHands:
         return value
     
     def stay_user_command(self):
-        if self.choise == 1:
+        if self.user_choice == 1:
             print(f"Player stayed, current score: {self.player_hand}")
             return self.user_hand_result
+    
     def stay_dealer_command(self):
-        if self.choise == 1:
-            print(f"Dealer stayed, current score: {self.dealer_hand}")
-            return self.dealer_hand_result
+        print(f"Dealer stayed, current score: {self.dealer_hand}")
+        return self.dealer_hand_result
 
     def card_comparison(self):
         self.user_hand_result = self.calculate_hand_value(self.player_hand)
@@ -67,5 +69,5 @@ class UserHands:
         if self.dealer_hand_result == 21:
             print(f"Dealer win with Natural BlackJack! User need a little bit bigger luck")
 
-        if self.dealer_hand_result >= 17 and not self.dealer_hand_result != 21: 
+        if 17 <= self.dealer_hand_result < 21:
             self.stay_dealer_command()
