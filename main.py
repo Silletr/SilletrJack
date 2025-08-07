@@ -1,8 +1,7 @@
 # --- IMPORTS ---
-import sys
 from os import getenv
 
-from game_process import *
+
 
 import discord 
 from discord.ext import commands
