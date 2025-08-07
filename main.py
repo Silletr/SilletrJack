@@ -1,6 +1,6 @@
 # --- IMPORTS ---
 from os import getenv
-
+import tracemalloc
 
 
 import discord 
@@ -11,7 +11,7 @@ TOKEN = getenv("JACK_TOKEN")
 intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix='!', intents=intents, help_command=None) 
-
+tracemalloc.start()
 
 # --- START COMMAND ---
 @bot.command()
@@ -26,8 +26,6 @@ async def help(ctx):
         "!help - well you understood, right?\n"
         "!blackjack - start game with dealer (algorithm, not a real human)\n"
         "!ping - pong!\n"
-        "Bot creator - @silletr_wt\n"
-        "Username of creator in Telegram - @Python_tor"
     )
 
 # --- PING COMMAND ---
@@ -38,7 +36,7 @@ async def ping(ctx):
 # --- BLACKJACK COMMAND ---
 @bot.command()
 async def blackjack(ctx):
-    pass
+    await ctx.reply("Will be soon, wait a little bit!")
 
 
 # --- POINT OF ENTER  ---
