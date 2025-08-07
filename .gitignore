@@ -4,4 +4,5 @@ JackEnv/
 .ruff_cache/
 __pycache__/
 .pytest_cache/
-game_process/__pycache__
+ game_process/__pycache__/
+ .coverage
