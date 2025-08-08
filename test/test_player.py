@@ -33,23 +33,23 @@ def test_show_hands_input_stay(monkeypatch, capsys):
 
     captured = capsys.readouterr()
     assert "Player's hand: ['2', '3'] = 5" in captured.out
-    assert u.user_choice == 1
+    assert u.player_choice == 1 
 
 def test_show_hands_input_hit(monkeypatch, capsys):
     u = PlayerHand()
     u.player_hand = ['2', '3']
     u.dealer_hand = ['4', '5']
 
-    monkeypatch.setattr('builtins.input', lambda _: "1")
+    monkeypatch.setattr('builtins.input', lambda _: "2")
     u.show_hands()
 
-    assert u.user_choice == 1
+    assert u.player_choice == 2
 
 def test_stay_user_command():
     u = PlayerHand()
-    u.user_choice = 1
+    u.player_choice = 1
     u.player_hand = ['10', 'J']
-    u.user_hand_result = u.calculate_hand_value(u.player_hand)
+    u.player_hand_result = u.calculate_hand_value(u.player_hand)
 
     result = u.stay_user_command()
     assert result == 20
@@ -67,12 +67,12 @@ def test_hit_dealer_command():
     u = PlayerHand()
     u.dealer_choice = 2
     u.dealer_hand = ['1', '3']
-    u.deck = ['4']
+    u.deck = ['1', '3', '4']
     result = u.hit_dealer_command()
-    assert result == 8 
+    assert result == 8
 
 @pytest.mark.parametrize("ph, dh, expected_output", [
-    (['A', 'K'], ['10', '9', '3'], "User wins with Natural BlackJack!"),
+    (['A', 'K'], ['10', '9', '3'], "Player wins with Natural BlackJack!"),
     (['10', '9'], ['A', 'K'], "Dealer wins with Natural BlackJack!"),
 ])
 def test_card_comparison_win_cases(ph, dh, expected_output, capsys):
@@ -88,7 +88,6 @@ def test_card_comparison_dealer_stay(capsys):
     u = PlayerHand()
     u.player_hand = ['10', '5']
     u.dealer_hand = ['10', '7']
-
     u.card_comparison()
 
     output = capsys.readouterr().out
