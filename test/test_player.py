@@ -64,8 +64,8 @@ def test_stay_dealer_command():
     assert result == 21
 
 @pytest.mark.parametrize("ph, dh, expected_output", [
-    (['A', 'K'], ['10', '9', '3'], "User win with Natural BlackJack!"),
-    (['10', '9'], ['A', 'K'], "Dealer win with Natural BlackJack!"),
+    (['A', 'K'], ['10', '9', '3'], "User wins with Natural BlackJack!"),
+    (['10', '9'], ['A', 'K'], "Dealer wins with Natural BlackJack!"),
 ])
 def test_card_comparison_win_cases(ph, dh, expected_output, capsys):
     u = UserHands()
