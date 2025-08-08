@@ -2,11 +2,10 @@ import random
 from typing import Dict, Any, List
 
 # TODO:
-# 1. Create dealer logic (dealer.py)
-# 2. Create Hit command (Stay command already done, need only Hit, it will be possible to import from this file)
+#    1. Create Win or Lose system for dealer
 
 
-class UserHands:
+class PlayerHand:
     def __init__(self) -> None:
         # Initialize full shuffled deck and empty hands for both player and dealer
         self.deck = self.generate_full_deck()
@@ -70,17 +69,37 @@ class UserHands:
         """Dealer stays: show hand and return value."""
         print(f"Dealer stayed, current score: {self.dealer_hand}")
         return self.dealer_hand_result
+    
+    def hit_user_command(self):
+        """ User hit: add 1 card and show it """
+        self.player_hand.append(self.deck.pop()) # Add new card to player hand
+        self.user_hand_result = self.calculate_hand_value(self.player_hand)  # count new hand result
+        return self.user_hand_result  # return new sum
+    
+        
+    def hit_dealer_command(self):
+        """Dealer hits: take one card, recalc and return new score."""
+        card = self.deck.pop()
+        self.dealer_hand.append(card)
+        # Counting new score
+
+        self.dealer_hand_result = self.calculate_hand_value(self.dealer_hand)
+        return self.dealer_hand_result
+
+
 
     def card_comparison(self):
-        """Compare both hands and print result."""
         self.user_hand_result = self.calculate_hand_value(self.player_hand)
         self.dealer_hand_result = self.calculate_hand_value(self.dealer_hand)
 
+        # Natural Blackjack / bust
         if self.user_hand_result == 21 or self.dealer_hand_result > 21:
             print("User wins with Natural BlackJack!")
-
+            return
         if self.dealer_hand_result == 21:
-            print("Dealer wins with Natural BlackJack! Unlucky round for player.")
-
+            print("Dealer wins with Natural BlackJack!")
+            return
+        # Dealer auto-stay
         if 17 <= self.dealer_hand_result < 21:
             self.stay_dealer_command()
+            return
