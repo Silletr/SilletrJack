@@ -10,10 +10,10 @@
 
 ---
 ## 📝 Description
-<!-- Describe what you changed and why -->
+**Describe what you changed and why**
 
 ## 🧾 Related Issues / Tickets
-<!-- Link any related issue or task -->
+**Link any related issue or task if available**
 
 ## ✅ Checklist
 - [ ] Code compiles
