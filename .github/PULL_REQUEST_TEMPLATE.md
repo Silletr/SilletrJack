@@ -10,14 +10,14 @@
 
 ---
 ## What changed:
-
-- Change 1
-- Change 2
+- *Change 1*
+- *Change 2*
 ---
 ## Why changed?
-
-Why u changed this file/files
+-  *Why u changed this file*
+-  *And why this*
+- *etc...*
 
 ---
 ## Additionally
-- Enter time and timezone: (example: 14:43, GMT+3, Date (DD/MM/YYYY)
+__- Enter time and timezone: (example: 14:43, GMT+3, Date (DD/MM/YYYY)__
