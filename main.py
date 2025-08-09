@@ -1,16 +1,49 @@
 # --- IMPORTS ---
+import os
 from os import getenv
+from dotenv import load_dotenv
 import tracemalloc
 
-
+from game_process import dealer, player
 import discord 
 from discord.ext import commands
 
-# --- VARIABLES AND .ENV ---
-TOKEN = getenv("JACK_TOKEN")
+
+def load_config():
+    """Load configuration with detailed debugging"""
+    print("\n=== Environment Check ===")
+    print(f"Current working directory: {os.getcwd()}")
+    print(f".env file exists: {os.path.exists('.env')}")
+    
+    # Try loading from .env file first
+    try:
+        load_dotenv()
+        print("Successfully loaded .env file")
+    except Exception as e:
+        print(f"Failed to load .env file: {str(e)}")
+    
+    # Get token and validate
+    token = getenv("JACK_TOKEN")
+    print(f"\nToken status:")
+    print(f"- Token type: {type(token)}")
+    print(f"- Token value: {'[REDACTED]' if token else 'None'}")
+    
+    if token is None:
+        print("\nERROR: Token not found!")
+        print("Possible causes:")
+        print("1. .env file not found")
+        print("2. JACK_TOKEN not defined in .env")
+        print("3. Environment variables not accessible")
+        exit(1)
+    
+    return token
+
+# Load configuration
+TOKEN = load_config()
+
 intents = discord.Intents.default()
 intents.message_content = True
-bot = commands.Bot(command_prefix='!', intents=intents, help_command=None) 
+bot = commands.Bot(command_prefix=';', intents=intents, help_command=None) 
 tracemalloc.start()
 
 # --- START COMMAND ---
