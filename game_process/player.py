@@ -102,4 +102,3 @@ class PlayerHand:
         # Dealer auto-stay
         if 17 <= self.dealer_hand_result < 21:
             self.stay_dealer_command()
-            return
