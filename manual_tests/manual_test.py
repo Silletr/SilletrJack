@@ -12,10 +12,10 @@ def main():
     while True:
         game.show_hands()
         
-        if game.user_choice == 1:  # Stay
+        if game.player_choice == 1:  # Stay
             print("Player stays.")
             break 
-        elif game.user_choice == 2:  # Hit
+        elif game.player_choice == 2:  # Hit
             card = game.deck.pop()
             game.player_hand.append(card)
             print(f"Player hits and gets: {card}")
