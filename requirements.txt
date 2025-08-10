@@ -2,3 +2,4 @@ discord.py
 pytest
 pytest-cov
 python-dotenv
+unittest

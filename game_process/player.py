@@ -1,9 +1,6 @@
 import random
 from typing import Dict, Any, List
 
-# TODO:
-#    1. Create Win or Lose system for dealer
-
 
 class PlayerHand:
     def __init__(self) -> None:
@@ -14,7 +11,7 @@ class PlayerHand:
         self.player_hand: List[str] = []
         self.dealer_hand: List[str] = []
         
-        # choices: 1 - stay, 2 - hit (for both player and dealer if needed)
+        # choices: 1 - stay, 2 - hit (for player and dealer)
         self.player_choice = 0
         self.dealer_choice = 0
 
@@ -69,17 +66,20 @@ class PlayerHand:
     def stay_dealer_command(self):
         """Dealer stays: show hand and return value."""
         print(f"Dealer stayed, current score: {self.dealer_hand}")
+        self.dealer_choice = 1
         return self.dealer_hand_result
     
     def hit_user_command(self):
         """ User hit: add 1 card and show it """
         self.player_hand.append(self.deck.pop()) 
         self.player_hand_result = self.calculate_hand_value(self.player_hand)  
+        self.player_choice = 2
         return self.player_hand_result
    
     def hit_dealer_command(self):
         """Dealer hits: take one card, recalc and return new score."""
         card = self.deck.pop()
+        self.dealer_choice = 2
         self.dealer_hand.append(card)
 
         # Counting new score
@@ -93,12 +93,38 @@ class PlayerHand:
         # Natural Blackjack / bust
         if self.player_hand_result == 21 and len(self.player_hand) == 2:
             print("Player wins with Natural BlackJack!")
-            return
 
         elif self.dealer_hand_result == 21 and len(self.dealer_hand) == 2:
             print("Dealer wins with Natural BlackJack!")
-            return
 
         # Dealer auto-stay
         if 17 <= self.dealer_hand_result < 21:
-            self.stay_dealer_command()
+            self.stay_dealer_command() 
+
+        # Dealer hit
+        if self.dealer_hand_result < 17:
+            self.hit_dealer_command()
+
+
+        # Compare final scores
+        print(f"\nFinal Results:")
+        print(f"Player hand: {self.player_hand} = {self.player_hand_result}")
+        print(f"Dealer hand: {self.dealer_hand} = {self.dealer_hand_result}")
+
+        # Determine winner based on final scores
+        if self.player_hand_result > 21:
+            print("Player busts! Dealer wins!")
+        elif self.dealer_hand_result > 21:
+            print("Dealer busts! Player wins!")
+        elif self.player_hand_result == self.dealer_hand_result:
+            print("Push! It's a tie!")
+
+        elif self.player_hand_result == 21:
+            print("Player wins with Blackjack!")
+        elif self.dealer_hand_result == 21:
+            print("Dealer wins with Blackjack!")
+
+        elif self.player_hand_result > self.dealer_hand_result:
+            print("Player wins with higher score!")
+        else:
+            print("Dealer wins with higher score!")
