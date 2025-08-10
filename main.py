@@ -4,7 +4,6 @@ from os import getenv
 from dotenv import load_dotenv
 import tracemalloc
 
-from game_process import dealer, player
 import discord 
 from discord.ext import commands
 
@@ -24,7 +23,7 @@ def load_config():
     
     # Get token and validate
     token = getenv("JACK_TOKEN")
-    print(f"\nToken status:")
+    print("\nToken status:")
     print(f"- Token type: {type(token)}")
     print(f"- Token value: {'[REDACTED]' if token else 'None'}")
     

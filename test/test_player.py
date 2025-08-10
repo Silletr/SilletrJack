@@ -1,6 +1,5 @@
 import unittest
-from unittest.mock import patch, MagicMock
-from typing import List
+from unittest.mock import patch
 from game_process.player import PlayerHand
 
 class TestPlayerHand(unittest.TestCase):
