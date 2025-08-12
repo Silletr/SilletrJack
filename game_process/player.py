@@ -10,11 +10,10 @@ class PlayerHand:
   
         self.player_hand: List[str] = []  
         self.dealer_hand: List[str] = []  
-          
-        # choices: 1 - stay, 2 - hit (for player and dealer)  
-        self.player_choice = 0  
-        self.dealer_choice = 0  
-  
+
+        self.player_choice = 0
+        self.dealer_choice = 0
+
     def generate_full_deck(self) -> List[str]:  
         """Generate standard 52-card deck, without suits """  
         base_cards = [str(i) for i in range(2, 11)] + ['K', 'Q', 'A', 'J']  
@@ -56,30 +55,31 @@ class PlayerHand:
   
         return value  
   
-    def stay_user_command(self):  
-        """If player chooses to stay (1), show hand and return value."""  
-        if self.player_choice == 1:  
-            print(f"Player stayed, current score: {self.player_hand}")  
-            return self.player_hand_result  # Return the hand value  
-        return None # if else - return None for other case  
-  
+    def stay_user_command(self):
+        """If player chooses to stay (1), show hand and return value."""
+        if self.player_choice == 1:
+            print(f"Player stayed, current score: {self.player_hand}")
+            self.player_hand_result = self.calculate_hand_value(self.player_hand)
+            return self.player_hand_result
+        return None  # if else - return None for other case
+
     def stay_dealer_command(self):  
         """Dealer stays: show hand and return value."""  
         print(f"Dealer stayed, current score: {self.dealer_hand}")  
-        self.dealer_choice = 1  
+        self.dealer_choice = 1
         return self.dealer_hand_result  
       
     def hit_user_command(self):  
         """ User hit: add 1 card and show it """  
         self.player_hand.append(self.deck.pop())   
         self.player_hand_result = self.calculate_hand_value(self.player_hand)    
-        self.player_choice = 2  
+        self.player_choice = 2
         return self.player_hand_result  
      
     def hit_dealer_command(self):  
         """Dealer hits: take one card, recalc and return new score."""  
         card = self.deck.pop()  
-        self.dealer_choice = 2  
+        self.dealer_choice = 2
         self.dealer_hand.append(card)  
   
         # Counting new score  
@@ -87,9 +87,9 @@ class PlayerHand:
         return self.dealer_hand_result  
   
     def card_comparison(self):  
-        self.player_hand_result = self.calculate_hand_value(self.player_hand)  
-        self.dealer_hand_result = self.calculate_hand_value(self.dealer_hand)  
-  
+        self.player_hand_result = self.calculate_hand_value(self.player_hand)
+        self.dealer_hand_result = self.calculate_hand_value(self.dealer_hand)
+
         # Natural Blackjack / bust  
         if self.player_hand_result == 21 and len(self.player_hand) == 2:  
             print("Player wins with Natural BlackJack!")  
