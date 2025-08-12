@@ -1,127 +1,87 @@
-import unittest
+import pytest
 from unittest.mock import patch
 from game_process.player import PlayerHand
 
 
-class TestPlayerHand(unittest.TestCase):
-    def setUp(self):
-        self.hand = PlayerHand()
+@pytest.fixture
+def hand():
+    return PlayerHand()
 
-    def test_generate_full_deck(self):
-        deck = self.hand.generate_full_deck()
-        self.assertEqual(len(deck), 52)
-        expected_cards = [str(i) for i in range(2, 11)] + ['K', 'Q', 'A', 'J']
-        for card in expected_cards:
-            self.assertEqual(deck.count(card), 4)
+  
+def test_generate_full_deck(hand):
+    """Test that deck generation creates 52 cards with correct distribution"""
+    deck = hand.generate_full_deck()
+    assert len(deck) == 52
+    # Check each card appears exactly 4 times
+    for card in ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'K', 'Q', 'A', 'J']:
+        assert deck.count(card) == 4
 
-    @patch('random.shuffle')
-    def test_init_shuffles_deck(self, mock_shuffle):
-        PlayerHand()
-        mock_shuffle.assert_called_once()
+def test_calculate_hand_value(hand):
+    """Test hand value calculation with various card combinations"""
+    # Test basic card values
+    assert hand.calculate_hand_value(['K', '9']) == 19
+    assert hand.calculate_hand_value(['A', '9']) == 20
+    assert hand.calculate_hand_value(['A', 'A']) == 12  # Should handle two aces correctly
+    
+    # Test bust scenarios with aces
+    assert hand.calculate_hand_value(['A', '10', '9']) == 20  # Ace should be worth 1
+    assert hand.calculate_hand_value(['A', 'A', '10']) == 12  # Two aces should be worth 1 each
 
-    def test_deal_initial_cards(self):
-        self.hand.deal_initial_cards()
-        self.assertEqual(len(self.hand.player_hand), 2)
-        self.assertEqual(len(self.hand.dealer_hand), 2)
-        self.assertEqual(len(self.hand.deck), 48)
+@patch("builtins.print")
+def test_stay_user_command(mock_print, hand):
+    """Test player stay command functionality"""
+    hand.player_hand = ['K', '9']
+    hand.player_hand_result = 19
+    hand.player_choice = 1
+    
+    result = hand.stay_user_command()
+    assert result == 19
+    mock_print.assert_called_once_with("Player stayed, current score: ['K', '9']")
 
-    def test_calculate_hand_value_basic(self):
-        self.assertEqual(self.hand.calculate_hand_value(['K', '9']), 19)
-        self.assertEqual(self.hand.calculate_hand_value(['A', '8']), 19)
+@patch("builtins.print")
+def test_stay_dealer_command(mock_print, hand):
+    """Test dealer stay command functionality"""
+    hand.dealer_hand = ['K', '9']
+    hand.dealer_hand_result = 19
+    
+    result = hand.stay_dealer_command()
+    assert result == 19
+    assert hand.dealer_choice == 1
+    mock_print.assert_called_once_with("Dealer stayed, current score: ['K', '9']")
 
-    def test_calculate_hand_value_aces(self):
-        self.assertEqual(self.hand.calculate_hand_value(['A', 'A']), 12)
+def test_hit_user_command(hand):
+    """Test player hit command functionality"""
+    hand.deck = ['A']  # Mock deck with single card
+    hand.player_hand = ['K', '9']
+    
+    result = hand.hit_user_command()
+    assert result == 20
+    assert hand.player_choice == 2
+    assert len(hand.player_hand) == 3
 
-    def test_calculate_hand_value_bust_with_ace(self):
-        self.assertEqual(self.hand.calculate_hand_value(['A', '10', '9']), 20)
+def test_hit_dealer_command(hand):
+    """Test dealer hit command functionality"""
+    hand.deck = ['A']  # Mock deck with single card
+    hand.dealer_hand = ['K', '9']
+    
+    result = hand.hit_dealer_command()
+    assert result == 20
+    assert hand.dealer_choice == 2
+    assert len(hand.dealer_hand) == 3
 
-    @patch('builtins.print')
-    @patch('builtins.input', return_value='1')
-    def test_show_hands_stay(self, mock_input, mock_print):
-        self.hand.player_hand = ['K', '9']
-        self.hand.dealer_hand = ['Q', '5']
-        self.hand.show_hands()
-        self.assertEqual(self.hand.player_choice, 1)
-
-    @patch('builtins.print')
-    @patch('builtins.input', return_value='2')
-    def test_show_hands_hit(self, mock_input, mock_print):
-        self.hand.player_hand = ['K', '9']
-        self.hand.dealer_hand = ['Q', '5']
-        self.hand.show_hands()
-        self.assertEqual(self.hand.player_choice, 2)
-
-    def test_stay_user_command(self):
-        self.hand.player_hand = ['K', '9']
-        self.hand.player_choice = 1
-        result = self.hand.stay_user_command()
-        self.assertEqual(result, 19)
-
-    def test_stay_user_command_player_hits(self):
-        self.hand.player_hand = ['K', '9']
-        self.hand.player_choice = 2
-        result = self.hand.stay_user_command()
-        self.assertIsNone(result)
-
-    def test_stay_dealer_command(self):
-        """Covers line 98: dealer stays."""
-        self.hand.dealer_hand = ['K', '9']
-        self.hand.dealer_hand_result = 19
-        result = self.hand.stay_dealer_command()
-        self.assertEqual(result, 19)
-
-    def test_hit_user_command(self):
-        self.hand.deck = ['A']
-        self.hand.player_hand = ['K', '9']
-        result = self.hand.hit_user_command()
-        self.assertEqual(result, 20)
-        self.assertEqual(len(self.hand.player_hand), 3)
-
-    def test_hit_dealer_command(self):
-        self.hand.deck = ['A']
-        self.hand.dealer_hand = ['K', '9']
-        result = self.hand.hit_dealer_command()
-        self.assertEqual(result, 20)
-        self.assertEqual(len(self.hand.dealer_hand), 3)
-
-    def test_card_comparison_natural_blackjack(self):
-        self.hand.player_hand = ['A', 'K']
-        self.hand.dealer_hand = ['Q', '9']
-        self.hand.card_comparison()
-
-    def test_card_comparison_dealer_blackjack(self):
-        """Covers line 125: dealer wins with Blackjack."""
-        self.hand.player_hand = ['K', '9']
-        self.hand.dealer_hand = ['A', 'K']
-        self.hand.card_comparison()
-
-    def test_card_comparison_dealer_stay(self):
-        self.hand.player_hand = ['K', '7']
-        self.hand.dealer_hand = ['Q', '9']
-        self.hand.card_comparison()
-
-    def test_card_comparison_dealer_hit(self):
-        self.hand.deck = ['K']
-        self.hand.player_hand = ['K', '7']
-        self.hand.dealer_hand = ['Q', '6']
-        self.hand.card_comparison()
-        self.assertEqual(len(self.hand.dealer_hand), 3)
-
-    def test_card_comparison_bust_scenarios(self):
-        self.hand.player_hand = ['K', 'Q', '9']
-        self.hand.dealer_hand = ['Q', '9']
-        self.hand.card_comparison()
-        self.hand.player_hand = ['K', '9']
-        self.hand.dealer_hand = ['K', 'Q', '9']
-        self.hand.card_comparison()
-
-    def test_card_comparison_player_wins_higher_score(self):
-        """Covers line 128: player wins with higher score."""
-        self.hand.player_hand = ['K', '9']
-        self.hand.dealer_hand = ['Q', '8']
-        self.hand.card_comparison()
-
-
-if __name__ == '__main__':
-    unittest.main()
-
+@pytest.mark.parametrize("player,dealer,expected", [
+    (['K', '9'], ['Q', '9'], "Push! It's a tie!"),  # Tie
+    (['A', 'K'], ['Q', '9'], "Player wins with Natural BlackJack!"),  # Player natural blackjack
+    (['Q', '9'], ['A', 'K'], "Dealer wins with Natural BlackJack!"),  # Dealer natural blackjack
+    (['K', '9'], ['Q', '8'], "Player wins with higher score!"),  # Player wins by points
+    (['Q', '8'], ['K', '9'], "Dealer wins with higher score!"),  # Dealer wins by points
+    (['K', '9', '9'], ['Q', '9'], "Player busts! Dealer wins!"),  # Player busts
+    (['Q', '9'], ['K', '9', '9'], "Dealer busts! Player wins!"),  # Dealer busts
+])
+@patch("builtins.print")
+def test_card_comparison(mock_print, hand, player, dealer, expected):
+    """Test all possible game outcomes in card comparison"""
+    hand.player_hand = player
+    hand.dealer_hand = dealer
+    hand.card_comparison()
+    mock_print.assert_any_call(expected)

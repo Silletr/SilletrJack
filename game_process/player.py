@@ -119,9 +119,9 @@ class PlayerHand:
         elif self.player_hand_result == self.dealer_hand_result:  
             print("Push! It's a tie!")  
   
-        elif self.player_hand_result == 21:  
+        elif self.player_hand_result == 21 and len(self.player_hand) == 2:  
             print("Player wins with Blackjack!")  
-        elif self.dealer_hand_result == 21:  
+        elif self.dealer_hand_result == 21 and len(self.player_hand) == 2:  
             print("Dealer wins with Blackjack!")  
   
         elif self.player_hand_result > self.dealer_hand_result:  
