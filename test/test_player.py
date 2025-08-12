@@ -2,10 +2,12 @@ import pytest
 from unittest.mock import patch
 from game_process.player import PlayerHand
 
+
 @pytest.fixture
 def hand():
     return PlayerHand()
 
+  
 def test_generate_full_deck(hand):
     """Test that deck generation creates 52 cards with correct distribution"""
     deck = hand.generate_full_deck()
