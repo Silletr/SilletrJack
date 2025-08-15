@@ -65,6 +65,7 @@ async def help(ctx):
         "!help - well you understood, right?\n"
         "!blackjack - start game with dealer (algorithm, not a real human)\n"
         "!ping - pong!\n"
+        "!clear - clear chat (for 14 days)\n"
     )
 
 
