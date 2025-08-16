@@ -1,5 +1,16 @@
 import random
 from typing import List
+from loguru import logger
+
+logger.remove(0)
+logger.add(
+    "disc_bot.log",
+    level="DEBUG",
+    format="{time:DD/MM/YYYY HH:mm} | <level>{level: <8}</level> | {message}",
+    rotation="10 MB",
+    retention="30 days",
+    compression="zip",
+)
 
 
 class PlayerHand:
@@ -17,12 +28,14 @@ class PlayerHand:
     def generate_full_deck(self) -> List[str]:
         """Generate standard 52-card deck, without suits"""
         base_cards = [str(i) for i in range(2, 11)] + ["K", "Q", "A", "J"]
+        logger.debug("Deck generated succefully")
         return base_cards * 4  # 4 of each card, like in standard deck
 
     def deal_initial_cards(self):
         """Deal two cards each to player and dealer from the top of the deck."""
         self.player_hand = [self.deck.pop(), self.deck.pop()]
         self.dealer_hand = [self.deck.pop(), self.deck.pop()]
+        self.card_comparison()
 
     def show_hands(self):
         """Display both hands and let user choose action if score < 21."""
@@ -120,11 +133,6 @@ class PlayerHand:
         if self.dealer_hand_result < 17:
             self.hit_dealer_command()
 
-        # Compare final scores
-        print("\nFinal Results:")
-        print(f"Player hand: {self.player_hand} = {self.player_hand_result}")
-        print(f"Dealer hand: {self.dealer_hand} = {self.dealer_hand_result}")
-
         # Determine winner based on final scores
         if self.player_hand_result > 21:
             print("Player busts! Dealer wins!")
@@ -137,3 +145,8 @@ class PlayerHand:
             print("Player wins with higher score!")
         else:
             print("Dealer wins with higher score!")
+
+        # Compare final scores
+        print("\nFinal Results:")
+        print(f"Player hand: {self.player_hand} = {self.player_hand_result}")
+        print(f"Dealer hand: {self.dealer_hand} = {self.dealer_hand_result}")
