@@ -2,7 +2,7 @@ import random
 from typing import List
 from loguru import logger
 
-logger.remove(0)
+logger.remove()
 logger.add(
     "disc_bot.log",
     level="DEBUG",
