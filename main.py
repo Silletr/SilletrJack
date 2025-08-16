@@ -12,7 +12,7 @@ from discord.ui import Button, View
 from discord.ext import commands
 from loguru import logger
 
-logger.remove(0)
+logger.remove()
 logger.add(
     "disc_bot.log",
     level="DEBUG",
