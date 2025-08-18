@@ -1,10 +1,4 @@
-.sonar/
-.env
-JackEnv/
+LazyEnv/
 .ruff_cache/
 __pycache__/
 .pytest_cache/
-game_process/__pycache__/
-tests/__pycache__/
-.coverage
-disc_bot.log
