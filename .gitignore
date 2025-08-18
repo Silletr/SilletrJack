@@ -7,3 +7,4 @@ __pycache__/
 game_process/__pycache__/
 tests/__pycache__/
 .coverage
+disc_bot.log
