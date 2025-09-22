@@ -1,8 +1,10 @@
-# SonarCloud.io
+# --- SonarCloud.io ---
 .sonar/
-# .env and my venv
+
+# --- .env and my venv ---
 .env
 JackEnv/
+
 # --- Cache ---
 .ruff_cache/
 __pycache__/
