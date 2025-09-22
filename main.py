@@ -6,6 +6,8 @@ import tracemalloc
 
 from game_process.player import PlayerHand
 from game_process.dealer import Dealer
+from support.send_ticket import SendTicket
+
 
 import discord
 from discord.ui import Button, View
@@ -81,7 +83,64 @@ async def clear(ctx):
     await ctx.channel.purge(limit=None)
     await ctx.send("Chat cleared (for this 14 days)", delete_after=3)
 
+# --- SUPPORT COMMAND ---
+class TicketView(View):
+    def __init__(self, ticket_sender: discord.Member):
+        super().__init__(timeout=None)  # No timeout for persistent buttons
+        self.ticket_sender = ticket_sender  # Store ticket creator for permission checks
 
+    @discord.ui.button(label="Close Ticket", style=discord.ButtonStyle.red, emoji="🔒")
+    async def close_button(self, interaction: discord.Interaction, button: Button):
+        # Check if the user is the ticket creator or has manage_channels permission
+        if interaction.user != self.ticket_sender and not interaction.user.guild_permissions.manage_channels:
+            await interaction.response.send_message("Only the ticket creator or admins can close this ticket!", ephemeral=True)
+            return
+
+        # Confirm before closing
+        await interaction.response.send_message("Closing the ticket in 5 seconds...", ephemeral=True)
+        await interaction.channel.delete()
+        # Optionally notify the user in DM or a log channel
+        try:
+            await self.ticket_sender.send(f"Your ticket in {interaction.guild.name} has been closed.")
+        except discord.errors.Forbidden:
+            pass  # User might have DMs disabled
+
+@bot.command()
+async def ticket(ctx, *, content: str = None):
+    """Create a new private channel for a ticket."""
+    if content is None or content.strip() == "":
+        await ctx.send("Hey, you forgot to provide a ticket description! Use the format: `!ticket <text>`")
+        return
+
+    try:
+        # Validate content length
+        if len(content) > 1000:
+            await ctx.send("Your ticket description is too long! Please keep it under 1000 characters.")
+            return
+
+        ticket = SendTicket(
+            ticket_name=f"ticket-{ctx.author.id}",
+            ticket_description=content.strip(),
+            ticket_sender=ctx.author
+        )
+
+        # Create the ticket channel
+        ticket_channel = await ticket.send_ticket(ctx.guild, bot)
+
+        # Send a message with the "Close Ticket" button in the ticket channel
+        view = TicketView(ticket_sender=ctx.author)
+        await ticket_channel.send(
+            f"Ticket created by {ctx.author.mention}\nDescription: {content.strip()}\n\nClick the button below to close the ticket.",
+            view=view
+        )
+
+        await ctx.send(f"✅ Your ticket is done: {ticket_channel.mention}")
+
+    except discord.errors.Forbidden:
+        await ctx.send("Error: I don't have permission to create a ticket channel. Please check my permissions!")
+    except Exception as e:
+        await ctx.send("An error occurred while creating your ticket. Please try again later.")
+        print(f"Error in ticket command: {e}")
 # --- PING COMMAND ---
 @bot.command()
 async def ping(ctx):

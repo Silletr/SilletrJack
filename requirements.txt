@@ -1,5 +1,12 @@
+# --- Discord lib
 discord.py
+
+# --- DotEnv access
 python-dotenv
+
+# --- Tests
 pytest
 pytest-cov
+
+# --- Logging 
 loguru
